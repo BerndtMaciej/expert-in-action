@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,4 +35,12 @@ public class Company {
             inverseJoinColumns = @JoinColumn(name = "serviceId")
     )
     private Set<Services> service;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "company")
+    private List<Offer> offers;
+
+
 }

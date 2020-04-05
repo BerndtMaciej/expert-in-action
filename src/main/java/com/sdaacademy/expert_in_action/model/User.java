@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,11 +38,11 @@ public class User {
     private LocalDate tokenDate;
     private Boolean status;
 
+    @OneToMany(mappedBy = "user")
+    private List<Company> comapny;
 
-//    token_resetu_hasla          VARCHAR2(64)       NULL,
-//    waznosc_tokenu_resetu_hasla TIMESTAMP(6)       NULL,
-//    idfirma                     CHAR(32)           NOT NULL
-
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
 }
 
