@@ -18,13 +18,17 @@ import java.util.UUID;
 public class User {
 
     @Id
+    @Column(length=16)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID userId;
 
     private String name;
     private String lastName;
     private String email;
     private String password;
+    private String city;
     private String token;
+    private String login;
     @ManyToMany
     @JoinTable(
             name = "user_role",
@@ -44,5 +48,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
+    public User(String name, String lastName,String login, String email, String password,String city, LocalDateTime registrationDate, Boolean status ) {
+        this.name = name;
+        this.lastName = lastName;
+        this.login=login;
+        this.email = email;
+        this.city= city;
+        this.password = password;
+        this.registrationDate = registrationDate;
+        this.status = status;
+
+    }
 }
 
