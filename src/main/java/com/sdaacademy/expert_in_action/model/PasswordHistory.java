@@ -8,24 +8,24 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-//@Entity
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class PasswordHistory {
 
-//    @Id
-//    @Column(length=16)
-//    private UUID passwordId;
-//    private String password;
-//    private LocalDateTime createPasswordDate;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
-//
-//    public PasswordHistory(String password, User user) {
-//
-//        this.password = password;
-//        this.user = user;
-//    }
+    @Id
+    @Column(length=16)
+    private UUID passwordId;
+    private String password;
+    private LocalDateTime createPasswordDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public PasswordHistory(String password, User user) {
+
+        this.password = password;
+        this.user = user;
+    }
 }

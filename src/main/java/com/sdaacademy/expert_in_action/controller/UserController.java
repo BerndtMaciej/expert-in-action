@@ -1,5 +1,6 @@
 package com.sdaacademy.expert_in_action.controller;
 
+import com.sdaacademy.expert_in_action.model.PasswordHistory;
 import com.sdaacademy.expert_in_action.model.User;
 import com.sdaacademy.expert_in_action.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,11 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/UserPasswords/id={user_id}")
-//    public List<PasswordHistory> getUserPasswordsByID(@PathVariable("user_id") UUID user_id) {
-//
-//        return userService.passwordList(user_id);
-//    }
+    @GetMapping("/UserPasswords/id={user_id}")
+    public List<PasswordHistory> getUserPasswordsByID(@PathVariable("user_id") UUID user_id) {
+
+        return userService.passwordList(user_id);
+    }
 
     @GetMapping("/User/id={user_id}")
     public User getUserByID(@PathVariable("user_id") UUID user_id) {

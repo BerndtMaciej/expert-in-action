@@ -3,11 +3,13 @@ package com.sdaacademy.expert_in_action.service;
 import com.sdaacademy.expert_in_action.model.PasswordHistory;
 import com.sdaacademy.expert_in_action.model.Role;
 import com.sdaacademy.expert_in_action.model.User;
+import com.sdaacademy.expert_in_action.repository.PasswordsRepository;
 import com.sdaacademy.expert_in_action.repository.RoleRepository;
 import com.sdaacademy.expert_in_action.repository.UserRepositor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,13 +18,14 @@ import java.util.UUID;
 public class UserService {
     private UserRepositor userRepositor;
     private RoleRepository roleRepository;
+    private PasswordsRepository passwordsRepository;
 
 
     @Autowired
-    public UserService(UserRepositor userRepositor, RoleRepository roleRepository) {
+    public UserService(UserRepositor userRepositor, RoleRepository roleRepository,PasswordsRepository passwordsRepository) {
         this.userRepositor = userRepositor;
         this.roleRepository = roleRepository;
-
+        this.passwordsRepository = passwordsRepository;
     }
 
     public Optional<User> getUserById(UUID user_id) {
@@ -46,10 +49,10 @@ public class UserService {
             user.setUserId(UUID.randomUUID());
             user.setRole(roleRepository.findRoleByRoleName("ROLE_USER"));
             userRepositor.save(user);
-//            PasswordHistory password1 = new PasswordHistory(user.getPassword(), user);
-//            password1.setPasswordId(UUID.randomUUID());
-//            password1.setCreatePasswordDate(LocalDateTime.now());
-//            passwordRepository.save(password1);
+            PasswordHistory password1 = new PasswordHistory(user.getPassword(), user);
+            password1.setPasswordId(UUID.randomUUID());
+            password1.setCreatePasswordDate(LocalDateTime.now());
+            passwordsRepository.save(password1);
             return true;
         }
     }
@@ -81,33 +84,42 @@ public class UserService {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (!user.getPassword().equals(newPassword) || newPassword.equals(confirmPassword)) {
-                user.setPassword(newPassword);
-                userRepositor.save(user);
-                return true;
+                if (passwordsRepository.findPasswordHistoryByUser_UserId(userId).stream().noneMatch(p -> p.getPassword().equals(newPassword))) {
+                    user.setPassword(newPassword);
+                    userRepositor.save(user);
+                    PasswordHistory password1 = new PasswordHistory(newPassword, user);
+                    password1.setPasswordId(UUID.randomUUID());
+                    password1.setCreatePasswordDate(LocalDateTime.now());
+                    passwordsRepository.save(password1);
+                    return true;
+                }
+                return false;
             }
             return false;
         }
         return false;
     }
-public Boolean updateRole(UUID userID,String roleName){
-    Optional<User> optUser = userRepositor.findById(userID);
-    if (optUser.isPresent()) {
-        User user = optUser.get();
-        user.setRole(roleRepository.findRoleByRoleName("ROLE_USER"));
-        userRepositor.save(user);
-        return true;
 
+
+    public Boolean updateRole(UUID userID, String roleName) {
+        Optional<User> optUser = userRepositor.findById(userID);
+        if (optUser.isPresent()) {
+            User user = optUser.get();
+            user.setRole(roleRepository.findRoleByRoleName(roleName));
+            userRepositor.save(user);
+            return true;
+
+        }
+        return false;
     }
-    return false;
-}
 
-//    public List<PasswordHistory> passwordList(UUID userId) {
-//        Optional<User> userOpt = userRepositor.findById(userId);
-//        if (userOpt.isPresent()) {
-//            User user = userOpt.get();
-//            return passwordRepository.findPasswordHistoryByUser(userId);
-//        }
-//        return null;
-//    }
+    public List<PasswordHistory> passwordList(UUID userId) {
+        Optional<User> userOpt = userRepositor.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            return passwordsRepository.findPasswordHistoryByUser_UserId(userId);
+        }
+        return null;
+    }
 
 }
