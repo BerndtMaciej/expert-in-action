@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,44 +22,58 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(length=16)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 16)
     private UUID userId;
-
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String name;
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String lastName;
+    @Email
+    @NotBlank
     private String email;
+    @NotBlank
+    @Size(min = 6, max = 255)
     private String password;
+    @NotBlank
     private String city;
     private String token;
+    @NotBlank
     private String login;
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
     private LocalDateTime registrationDate;
     private LocalDateTime LastLoginDate;
     private LocalDateTime failLoginDate;
     private LocalDate tokenDate;
     private Boolean status;
 
-    @OneToMany(mappedBy = "user")
-    private List<Company> comapny;
 
-    @OneToMany(mappedBy = "user")
-    private List<Task> tasks;
+//    @OneToMany(mappedBy = "user")
+//    private List<PasswordHistory> passwords;
 
-    public User(String name, String lastName,String login, String email, String password,String city, LocalDateTime registrationDate, Boolean status ) {
+    public User(String name, String lastName, String login, String email, String password, String city, LocalDateTime registrationDate, Boolean status) {
         this.name = name;
         this.lastName = lastName;
-        this.login=login;
+        this.login = login;
         this.email = email;
-        this.city= city;
+        this.city = city;
         this.password = password;
         this.registrationDate = registrationDate;
+        this.status = status;
+
+
+    }
+
+    public User(UUID user_id, String city, String email, String name, String lastName, String login, String password, Boolean status) {
+        this.name = name;
+        this.lastName = lastName;
+        this.login = login;
+        this.email = email;
+        this.city = city;
+        this.password = password;
         this.status = status;
 
     }
