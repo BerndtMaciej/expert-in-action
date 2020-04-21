@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -22,7 +25,7 @@ public class UserService {
 
 
     @Autowired
-    public UserService(UserRepositor userRepositor, RoleRepository roleRepository,PasswordsRepository passwordsRepository) {
+    public UserService(UserRepositor userRepositor, RoleRepository roleRepository, PasswordsRepository passwordsRepository) {
         this.userRepositor = userRepositor;
         this.roleRepository = roleRepository;
         this.passwordsRepository = passwordsRepository;
@@ -83,7 +86,7 @@ public class UserService {
         Optional<User> userOpt = userRepositor.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (!user.getPassword().equals(newPassword) || newPassword.equals(confirmPassword)) {
+            if (!user.getPassword().equals(newPassword) && newPassword.equals(confirmPassword)) {
                 if (passwordsRepository.findPasswordHistoryByUser_UserId(userId).stream().noneMatch(p -> p.getPassword().equals(newPassword))) {
                     user.setPassword(newPassword);
                     userRepositor.save(user);
@@ -91,6 +94,40 @@ public class UserService {
                     password1.setPasswordId(UUID.randomUUID());
                     password1.setCreatePasswordDate(LocalDateTime.now());
                     passwordsRepository.save(password1);
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public Boolean updateLogin(UUID userId, String login) {
+        Optional<User> userOpt = userRepositor.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (!user.getLogin().equals(login)) {
+                if (userRepositor.findAll().stream().noneMatch(u -> u.getLogin().equals(login))) {
+                    user.setLogin(login);
+                    userRepositor.save(user);
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public Boolean updateEmail(UUID userId, String email) {
+        Optional<User> userOpt = userRepositor.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (!user.getEmail().equals(email)) {
+                if (userRepositor.findAll().stream().noneMatch(u -> u.getEmail().equals(email))) {
+                    user.setEmail(email);
+                    userRepositor.save(user);
                     return true;
                 }
                 return false;
@@ -113,13 +150,73 @@ public class UserService {
         return false;
     }
 
-    public List<PasswordHistory> passwordList(UUID userId) {
+    public List<String> passwordList(UUID userId) {
         Optional<User> userOpt = userRepositor.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            return passwordsRepository.findPasswordHistoryByUser_UserId(userId);
+            List<String> passwords =passwordsRepository.findPasswordHistoryByUser_UserId(userId).stream().map(p->p.getPassword()).collect(Collectors.toList());
+            return passwords;
         }
         return null;
+    }
+
+    public Boolean updateUser(UUID userId, String name, String lastName, String login, String email, String password, String confirmPassword, String city) {
+        if(name==null && lastName ==null && login ==null && email ==null && password == null  && city == null){return false;}
+        Optional<User> userOpt = userRepositor.findById(userId);
+        if (userOpt.isPresent()) {
+
+            boolean flagNane = false;
+            boolean flagLastName = false;
+            boolean flagLogin = false;
+            boolean flagEmail = false;
+            boolean flagPassword = false;
+            boolean flagCity = false;
+            User user = userOpt.get();
+
+
+            if (email == null) {
+                flagEmail = true;
+            } else {
+                flagEmail= updateEmail(userId, email);
+            }
+            if (login == null) {
+                flagLogin = true;
+            } else {
+                flagLogin= updateLogin(userId,login);
+            }
+            if (password == null && confirmPassword==null) {
+                flagPassword = true;
+            } else {
+                flagPassword= updatePassword(userId,password,confirmPassword);
+            }
+            if (name != null) {
+                flagNane =true;
+                user.setName(name);
+            }else {
+                flagNane =true;
+            }
+            if (lastName != null) {
+                flagLastName =true;
+                user.setLastName(lastName);
+            }else {
+                flagLastName =true;
+            }
+            if (city != null) {
+                flagCity =true;
+                user.setCity(city);
+            }else {
+                flagCity =true;
+            }
+
+            if (true ==flagNane== flagLastName == flagLogin == flagEmail == flagPassword == flagCity) {
+                userRepositor.save(user);
+                return true;
+            }
+
+
+            return false;
+        }
+        return false;
     }
 
 }

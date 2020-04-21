@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/UserPasswords/id={user_id}")
-    public List<PasswordHistory> getUserPasswordsByID(@PathVariable("user_id") UUID user_id) {
+    public List<String> getUserPasswordsByID(@PathVariable("user_id") UUID user_id) {
 
         return userService.passwordList(user_id);
     }
@@ -60,9 +60,18 @@ public class UserController {
     public Boolean updatePassword(@RequestParam("user_id") UUID userId,@RequestParam("password") String password,@RequestParam("confirmpassword") String confirmPassword){
         return userService.updatePassword(userId,password,confirmPassword);
     }
+    @PutMapping("/updateUserLogin")
+    public Boolean updateLogin(@RequestParam("user_id") UUID userId,@RequestParam("login") String login){
+        return userService.updateLogin(userId,login);
+}
     @PutMapping("/upadateUserRole")
     public  Boolean updateUserRole(@RequestParam("user_id")UUID userId,@RequestParam("role")String role){
         return userService.updateRole(userId,role);
+    }
+    @PutMapping("/upadateUser")
+    public Boolean updateUser(@RequestParam UUID userId, String name,  String lastName, String login, String email,
+            String password,String confirmPassword,String city){
+        return userService.updateUser(userId,name,lastName,login,email,password,confirmPassword,city);
     }
 
 }
