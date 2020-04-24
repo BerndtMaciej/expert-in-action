@@ -25,22 +25,22 @@ public class User {
     @Column(length = 16)
     @GeneratedValue
     private UUID userId;
-//    @NotBlank
-//    @Size(min = 3, max = 255)
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String name;
-//    @NotBlank
-//    @Size(min = 3, max = 255)
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String lastName;
-//    @Email
-//    @NotBlank
+    @Email
+    @NotBlank
     private String email;
-//    @NotBlank
-//    @Size(min = 6, max = 255)
+    @NotBlank
+    @Size(min = 6, max = 255)
     private String password;
-//    @NotBlank
+    @NotBlank
     private String city;
     private String token;
-//    @NotBlank
+    @NotBlank
     private String login;
     @ManyToOne
     @JoinColumn(name = "role_id")
