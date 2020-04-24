@@ -15,6 +15,8 @@ import java.util.UUID;
 @Data
 public class Company {
     @Id
+    @Column(length=16)
+    @GeneratedValue
     private UUID companyId;
     private String coampanyName;
     private String city;

@@ -16,6 +16,7 @@ public class PasswordHistory {
 
     @Id
     @Column(length=16)
+    @GeneratedValue
     private UUID passwordId;
     private String password;
     private LocalDateTime createPasswordDate;

@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PasswordsRepository extends JpaRepository<PasswordHistory, UUID> {
-    List<PasswordHistory> findPasswordHistoryByUser_UserId(UUID userId);
+    List<PasswordHistory> findAllByUser_UserId(UUID userId);
+//    PasswordHistory findPasswordHistory(UUID userId);
+
 }
