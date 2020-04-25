@@ -42,12 +42,9 @@ public class UserService {
 
     public boolean registerUser(User user) {
 
-//        if (userRepositor.findAll().stream().anyMatch(u -> u.getEmail().equals(user.getEmail())) ||
-//                userRepositor.findAll().stream().anyMatch(u -> u.getLogin().equals(user.getLogin())))
-        if(userRepositor.findUserByLogin(user.getLogin()).isPresent()||
+        if (userRepositor.findUserByLogin(user.getLogin()).isPresent() ||
                 userRepositor.findUserByEmail(user.getEmail()).isPresent()
-        )
-        {
+        ) {
             return false;
         } else {
             user.setRole(roleRepository.findRoleByRoleName("ROLE_USER"));
@@ -65,7 +62,7 @@ public class UserService {
         if (optUser.isPresent()) {
             User user = optUser.get();
             for (PasswordHistory passwordHistory : passwordsRepository.findAllByUser_UserId(uuid)
-                 ) {
+            ) {
                 passwordsRepository.delete(passwordHistory);
             }
             userRepositor.delete(user);
@@ -130,7 +127,7 @@ public class UserService {
             if (!user.getEmail().equals(email)) {
                 if (userRepositor.findUserByEmail(email).isPresent()) {
                     return false;
-                }else {
+                } else {
                     user.setEmail(email);
                     userRepositor.save(user);
                     return true;
@@ -147,7 +144,7 @@ public class UserService {
         Optional<User> optUser = userRepositor.findById(userID);
         if (optUser.isPresent()) {
             User user = optUser.get();
-            if (roleRepository.findRoleByRoleName(roleName)!=null) {
+            if (roleRepository.findRoleByRoleName(roleName) != null) {
                 user.setRole(roleRepository.findRoleByRoleName(roleName));
                 userRepositor.save(user);
                 return true;
