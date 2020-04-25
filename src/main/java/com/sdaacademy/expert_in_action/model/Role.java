@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,6 +14,8 @@ import java.util.UUID;
 @Data
 public class Role {
     @Id
-    private UUID roleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roleId;
     private String roleName;
+
 }

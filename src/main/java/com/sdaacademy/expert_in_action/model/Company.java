@@ -15,32 +15,13 @@ import java.util.UUID;
 @Data
 public class Company {
     @Id
+    @Column(length=16)
+    @GeneratedValue
     private UUID companyId;
     private String coampanyName;
     private String city;
     private String comopanyAddress;
     private int postalCode;
     private int nip;
-    @ManyToMany
-    @JoinTable(
-            name = "comapny_comapanyType",
-            joinColumns = @JoinColumn(name = "companyId"),
-            inverseJoinColumns = @JoinColumn(name = "companyTypeId")
-    )
-    private Set<CompanyType> companyType;
-    @ManyToMany
-    @JoinTable(
-            name = "comapny_service",
-            joinColumns = @JoinColumn(name = "companyId"),
-            inverseJoinColumns = @JoinColumn(name = "serviceId")
-    )
-    private Set<Services> service;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "company")
-    private List<Offer> offers;
-
 
 }
