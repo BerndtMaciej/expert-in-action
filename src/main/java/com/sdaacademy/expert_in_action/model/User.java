@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -39,7 +35,7 @@ public class User {
     private String password;
     @NotBlank
     private String city;
-    private String token;
+
     @NotBlank
     private String login;
     @ManyToOne
@@ -48,12 +44,8 @@ public class User {
     private LocalDateTime registrationDate;
     private LocalDateTime LastLoginDate;
     private LocalDateTime failLoginDate;
-    private LocalDate tokenDate;
     private Boolean status;
 
-
-//    @OneToMany(mappedBy = "user")
-//    private List<PasswordHistory> passwords;
 
     public User(String name, String lastName, String login, String email, String password, String city, LocalDateTime registrationDate, Boolean status) {
         this.name = name;
