@@ -27,14 +27,12 @@ public class UserController {
 
     @GetMapping("/User/id={user_id}")
     public User getUserByID(@PathVariable("user_id") UUID userId) {
-        Optional<User> userOpt = userService.getUserById(userId);
-        return userOpt.orElseGet(User::new);
+        return userService.getUserById(userId).get();
     }
 
     @GetMapping("/User/login={login}")
     public User getUserByLogin(@PathVariable("login") String login) {
-        Optional<User> userOpt = userService.getUserByLogin(login);
-        return userOpt.orElseGet(User::new);
+        return userService.getUserByLogin(login).get();
     }
 
     @GetMapping("/users")

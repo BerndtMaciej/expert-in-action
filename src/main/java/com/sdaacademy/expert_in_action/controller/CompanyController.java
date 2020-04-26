@@ -26,14 +26,12 @@ public class CompanyController {
 
     @GetMapping("/Company/id={company_id}")
     public Company getComapnyByID(@PathVariable("company_id") UUID comapnyId) {
-        Optional<Company> comapnyOpt = companyService.getComapnyById(comapnyId);
-        return comapnyOpt.orElseGet(Company::new);
+        return companyService.getComapnyById(comapnyId).get();
     }
 
     @GetMapping("/Comapny/login={login}")
     public Company getCompanyByLogin(@PathVariable("login") String login) {
-        Optional<Company> comapnyOpt = companyService.getCompanyByLogin(login);
-        return comapnyOpt.orElseGet(Company::new);
+        return companyService.getCompanyByLogin(login).get();
     }
 
     @GetMapping("/company")

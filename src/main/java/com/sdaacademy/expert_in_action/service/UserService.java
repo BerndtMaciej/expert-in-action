@@ -40,7 +40,7 @@ public class UserService {
         return userRepositor.findAll();
     }
 
-    public boolean registerUser(User user) {
+    public Boolean registerUser(User user) {
 
         if (userRepositor.findUserByLogin(user.getLogin()).isPresent() ||
                 userRepositor.findUserByEmail(user.getEmail()).isPresent()

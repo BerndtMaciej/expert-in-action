@@ -41,7 +41,7 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public boolean registerComapny(Company company) {
+    public Boolean registerComapny(Company company) {
         if (companyRepository.findCompanyByLogin(company.getLogin()).isPresent() ||
                 companyRepository.findCompanyByEmail(company.getEmail()).isPresent() ||
                 companyRepository.findCompanyByNip(company.getNip()).isPresent()) {
